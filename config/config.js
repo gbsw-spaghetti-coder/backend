@@ -2,10 +2,10 @@ require('dotenv').config();
 const env = process.env;
 
 const development = {
-  username: "root",
-  password: "1234",
-  database: "spaghetti_listener",
-  host: "localhost",
+  username: env.DATABASE_USERNAME,
+  password: env.DATABASE_PASSWORD,
+  database: env.DATABASE_DATABASE,
+  host: env.DATABASE_HOST,
   dialect: "mysql",
   port: 3307,
   timezone : "+09:00",

@@ -27,6 +27,12 @@ module.exports = class User extends Sequelize.Model {
         allowNull: true,
         comment: "프로필 이미지"
       },
+      point: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        defaultValue: 0,
+        comment: "유저 포인트"
+      },
       provider: {
         type : Sequelize.STRING(10),
         allowNull: false,
