@@ -19,14 +19,11 @@ exports.getAnswer = async (req, res) => {
 
 exports.createAnswer = async (req, res) => {
   try {
-
-    for(let i = 0; i < 7; i++) {
-      await Answer.create({
-        content: req.body.content,
-        QuestionId: parseInt(req.params.id, 10),
-        UserId: req.user.id,
-      })
-    }
+    await Answer.create({
+      content: req.body.content,
+      QuestionId: parseInt(req.params.id, 10),
+      UserId: req.user.id,
+    });
 
     res.status(200).json({
       success: true,

@@ -11,7 +11,7 @@ const s3 = new AWS.S3({
 exports.profileUploader = multer({
   storage: multerS3({
     s3: s3,
-    bucket: 'spaghetti-listener',
+    bucket: process.env.AWS_BUCKET_NAME,
     ACL: 'public-read-write',
     key(req, file, cb) {
       cb(null, `profiles/${Date.now()}_${file.originalname}`)
@@ -22,7 +22,7 @@ exports.profileUploader = multer({
 exports.postUploader= multer({
   storage: multerS3({
     s3: s3,
-    bucket: 'spaghetti-listener',
+    bucket: process.env.AWS_BUCKET_NAME,
     ACL: 'public-read-write',
     key(req, file, cb) {
       cb(null, `posts/${Date.now()}_${file.originalname}`)
