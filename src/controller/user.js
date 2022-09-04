@@ -6,7 +6,8 @@ exports.getMyData = async (req, res) => {
     const data = {
       email: req.user.dataValues.email,
       nick: req.user.dataValues.nick,
-      profile_img: req.user.dataValues.profile_img
+      profile_img: req.user.dataValues.profile_img,
+      point: req.user.dataValues.point
     }
     res.json({ success: true, data })
   } catch (error) {
@@ -23,13 +24,16 @@ exports.updateUser = async (req, res) => {
   }
 }
 
+exports.updatePassword = async (req, res) => {
+
+}
+
 exports.updateMyIntroduce = async (req, res) => {
   try {
     await User.update(
       { introduce: req.body.introduce},
       { where: {id: req.user.id} }
     );
-
     res.status(200).json({
       success: true,
       message: "자기소개 수정 성공"

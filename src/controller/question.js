@@ -3,12 +3,14 @@ const { Question } = require('../models');
 exports.createQuestion = async (req, res) => {
   const { title, content, category } = req.body;
   try {
-    await Question.create({
-      title,
-      content,
-      category,
-      UserId: req.user.id,
-    });
+    for (let i = 1; i <= 100; i++) {
+      await Question.create({
+        title,
+        content,
+        category,
+        UserId: req.user.id,
+      });
+    }
     res.status(200).json({
       success: true,
       message: "질문 등록 성공"
@@ -32,7 +34,8 @@ exports.getQuestions = async (req, res) => {
   try {
     const data = await Question.findAll({
       offset: offset,
-      limit: 15
+      limit: 15,
+      order: [['id', 'desc']]
     })
     res.status(200).json({
       success: true,
@@ -62,6 +65,28 @@ exports.getQuestion = async (req, res) => {
   }
 }
 
+exports.updateQuestion = async (req, res) => {
+  try {
+    const question = await Question.findOne({ where: { id: req.params.id }});
+
+    if(req.user.id !== question.dataValues.UserId) {
+      res.status(401).json({ success: false, message: "수정 권한이 없습니다" });
+    } else {
+      await Question.update(
+        { title: req.body.title },
+        { content: req.body.content },
+        { where: { id: req.params.id } }
+      )
+      res.status(200).json({
+        success: true,
+        message: "질문 수정 완료"
+      })
+    }
+  } catch (error) {
+    console.error(error);
+  }
+}
+
 exports.delete = async (req, res) => {
   try {
     const question = await Question.findOne({ where: { id: req.params.id }});
@@ -84,4 +109,15 @@ exports.delete = async (req, res) => {
       message: '질문 삭제 실패',
     });
   }
+}
+
+exports.searchQuestion = async (req, res) => {
+  try {
+    const search = req.query.search;
+
+    await Question.findAndCountAll()
+  } catch (error) {
+    console.error(error);
+  }
+
 }

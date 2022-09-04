@@ -24,7 +24,6 @@ exports.createAnswer = async (req, res) => {
       QuestionId: parseInt(req.params.id, 10),
       UserId: req.user.id,
     });
-
     res.status(200).json({
       success: true,
       message: "댓글 등록 성공"

@@ -56,6 +56,6 @@ app.use('/api/user', userRouter);
 app.use('/api/question', questionRouter);
 app.use('/api/answer', answerRouter);
 
-app.listen(3001, () => {
-  console.log('app listening on http://localhost:3001');
+app.listen(process.env.PORT, () => {
+  console.log(`app listening on http://localhost:${process.env.PORT}`);
 });
