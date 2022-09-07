@@ -13,18 +13,6 @@ module.exports = class Question extends Sequelize.Model {
         allowNull: false,
         comment: "질문 내용"
       },
-      good: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-        defaultValue: 0,
-        comment: "추천"
-      },
-      bad: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-        defaultValue: 0,
-        comment: "비추천"
-      },
       views: {
         type: Sequelize.INTEGER,
         allowNull: false,
@@ -51,5 +39,7 @@ module.exports = class Question extends Sequelize.Model {
     db.Question.belongsTo(db.User); // post.addUser, post.getUser, post.setUser
     db.Question.hasMany(db.Image); // post.addImages, post.getImages
     db.Question.hasMany(db.Answer); // post.addComments, post.getComments
+    db.Question.belongsToMany(db.User, { through: 'Good', as: 'Gooders' });
+    db.Question.belongsToMany(db.User, { through: 'Bad', as: 'Baders'});
   }
 };
