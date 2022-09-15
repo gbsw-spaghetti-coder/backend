@@ -121,3 +121,19 @@ exports.searchQuestion = async (req, res) => {
   }
 
 }
+
+exports.goodQuestion = async (req, res) => {
+  try {
+    const post = await Question.findOne({ where: { id: req.params.id }});
+
+    if (!post) {
+      return res.status(403).json({ success: false, message: "질문이 존재하지 않습니다"});
+    }
+
+    await Question.remove
+
+
+  } catch (error) {
+    console.error(error);
+  }
+}
