@@ -1,16 +1,19 @@
-const { Question } = require('../models');
+const url = require('url');
+const sequelize = require("sequelize");
+const { Question, User } = require('../models');
+const Op = sequelize.Op;
 
 exports.createQuestion = async (req, res) => {
   const { title, content, category } = req.body;
   try {
-    for (let i = 1; i <= 100; i++) {
-      await Question.create({
-        title,
-        content,
-        category,
-        UserId: req.user.id,
-      });
-    }
+
+    await Question.create({
+      title,
+      content,
+      category,
+      UserId: req.user.id,
+    });
+
     res.status(200).json({
       success: true,
       message: "질문 등록 성공"
@@ -25,7 +28,8 @@ exports.createQuestion = async (req, res) => {
 }
 
 exports.getQuestions = async (req, res) => {
-  let pageNum = req.query.page; // 요청 페이지 넘버
+  console.log(req.query, req.url);
+  let pageNum = req.query.page;
   let offset = 0;
 
   if(pageNum > 1){
@@ -112,15 +116,72 @@ exports.delete = async (req, res) => {
 }
 
 exports.searchQuestion = async (req, res) => {
-  try {
-    const search = req.query.search;
 
-    await Question.findAndCountAll()
+
+  try {
+    const query = url.parse(req.url, true).query;
+    //url = http://localhost:3001/api/question/search?q=zz
+    /*if(pageNum > 1){
+      offset = 15 * (pageNum - 1);
+    }
+    const question = await Question.findAll({
+      where:{
+        [Op.or]: [
+          {
+            title: {
+              [Op.like]: "%" + query.search + "%"
+            }
+          },
+          {
+            content: {
+              [Op.like]: "%" + query.search + "%"
+            }
+          }
+        ]
+      },
+      include: User,
+      offset: offset,
+      limit: 15,
+      order: [['id', 'desc']]
+    });*/
+    res.status(200).json({
+      success: true,
+    });
   } catch (error) {
     console.error(error);
   }
-
 }
+
+/*exports.search = async (req, res) => {
+  let query = req.query.q;
+  try {
+    const questions = await Question.findAll({
+      where:{
+        [Op.or]: [
+          {
+            title: {
+              [Op.like]: "%" + query + "%"
+            }
+          },
+          {
+            content: {
+              [Op.like]: "%" + query + "%"
+            }
+          }
+        ]
+      },
+      include: User,
+      limit: 15,
+      order: [['id', 'desc']]
+    });
+    res.statsus(200).json({
+      success: true,
+      questions
+    })
+  } catch (error) {
+    console.error(error);
+  }
+}*/
 
 exports.goodQuestion = async (req, res) => {
   try {
@@ -129,9 +190,6 @@ exports.goodQuestion = async (req, res) => {
     if (!post) {
       return res.status(403).json({ success: false, message: "질문이 존재하지 않습니다"});
     }
-
-    await Question.remove
-
 
   } catch (error) {
     console.error(error);

@@ -7,13 +7,22 @@ exports.sign = async (req, res) => {
   try {
     const hash = await bcrypt.hash(password, 12);
 
-    await User.create({
-      email,
-      password: hash,
-      nick,
-      profile_img: req.file.location,
-      provider: 'local',
-    });
+    if(req.file == null) {
+      await User.create({
+        email,
+        password: hash,
+        nick,
+        provider: 'local',
+      });
+    } else {
+      await User.create({
+        email,
+        password: hash,
+        nick,
+        profile_img: req.file.location,
+        provider: 'local',
+      });
+    }
 
     res.status(201).json({
       success: true,
@@ -25,7 +34,13 @@ exports.sign = async (req, res) => {
         success: false,
         message: "올바른 이메일 형식이 아닙니다"
       })
+    } else if(error.name === "SequelizeUniqueConstraintError") {
+      res.status(400).json({
+        success: false,
+        message: "이미 가입된 이메일 입니다"
+      })
     } else {
+      console.error(error.name);
       res.status(400).json({
         success: false,
         message: "가입 실패",

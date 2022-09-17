@@ -5,16 +5,17 @@ const controller = require('../controller/question');
 
 const { isLoggedIn } = require('../utils/middlewares');
 
-const { profileUploader} = require('../utils/uploader');
+const { profileUploader } = require('../utils/uploader');
 
 router.get('/:id', controller.getQuestion);
 router.get('/', controller.getQuestions);
 router.get('/search', controller.searchQuestion);
 router.post('/', isLoggedIn, controller.createQuestion);
 router.delete('/:id', isLoggedIn, controller.delete);
+router.get('/good/:id', isLoggedIn, controller.goodQuestion);
 
 
-router.post('/image', profileUploader.single('image'), (req, res) => {
+/*router.post('/image', profileUploader.single('image'), (req, res) => {
   console.log(req.file);
   console.log(req.body)
   try {
@@ -22,6 +23,6 @@ router.post('/image', profileUploader.single('image'), (req, res) => {
   } catch(error) {
     console.error(error);
   }
-})
+})*/
 
 module.exports = router;
