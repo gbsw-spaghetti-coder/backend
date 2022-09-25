@@ -13,7 +13,7 @@ router.get('/github', passport.authenticate('github'));
 router.get('/github/callback', passport.authenticate('github', {
   failureRedirect: '/',
 }), (req, res) => {
-  res.redirect('/');
+  res.redirect('http://localhost:3000/dfad');
 })
 
 module.exports = router;

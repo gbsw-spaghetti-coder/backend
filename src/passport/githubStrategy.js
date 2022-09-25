@@ -7,13 +7,15 @@ module.exports = () => {
   passport.use(new GithubStrategy({
     clientID: process.env.GITHUB_CLIENTID,
     clientSecret: process.env.GITHUB_CLIENT_SECRET,
-    callbackURL: 'http://127.0.0.1:3001/api/auth/github/callback'
+    callbackURL: '/api/auth/github/callback'
   }, async (accessToken, refreshToken, profile, done) => {
     console.log(profile._json);
     try {
       const exUser = await User.findOne({
-        snsId: profile._json.id,
-        provider: 'github'
+        where: {
+          snsId: profile._json.id,
+          provider: 'github'
+        }
       })
 
       if (exUser) {
@@ -21,7 +23,7 @@ module.exports = () => {
       } else {
         const newUser = await User.create({
           email: profile._json.email,
-          nick: profile._json.login,
+          nick: profile._json.name,
           profile_img: profile._json.avatar_url,
           snsId: profile._json.id,
           provider: 'github',

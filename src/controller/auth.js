@@ -57,7 +57,7 @@ exports.login = async (req, res, next) => {
     }
 
     if (!user) {
-      return res.status(400).json({ success: false, message: "유저 정보가 없습니다"});
+      return res.status(400).json({ success: false, message: "유저 정보가 다릅니다"});
     }
 
     return req.login(user, (loginError) => {
@@ -75,7 +75,9 @@ exports.logout = async (req, res, next) => {
     if(err) {
       return next(err);
     }
-    req.session.destroy();
+    req.session.destroy(() => {
+      req.session;
+    });
     res.status(200).json({ success: true, message: "로그아웃 성공"});
   });
 }

@@ -25,7 +25,11 @@ exports.updateUser = async (req, res) => {
 }
 
 exports.updatePassword = async (req, res) => {
+  try {
 
+  } catch(error) {
+    console.error(error);
+  }
 }
 
 exports.updateMyIntroduce = async (req, res) => {
