@@ -6,6 +6,7 @@ const User = require('./user');
 const Answer = require('./answer');
 const Question = require('./question');
 const Image = require('./image');
+const Good = require('./good');
 
 const db = {};
 const sequelize = new Sequelize(
@@ -17,11 +18,13 @@ db.User = User;
 db.Question = Question;
 db.Answer = Answer;
 db.Image = Image;
+db.Good = Good;
 
 User.init(sequelize);
 Question.init(sequelize);
 Answer.init(sequelize);
 Image.init(sequelize);
+Good.init(sequelize);
 
 Question.associate(db);
 Image.associate(db);

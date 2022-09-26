@@ -8,18 +8,6 @@ module.exports = class Answer extends Sequelize.Model {
         allowNull: false,
         comment: "답변 내용"
       },
-      good: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-        defaultValue: 0,
-        comment: "추천"
-      },
-      bad: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-        defaultValue: 0,
-        comment: "비추천"
-      },
       selection: {
         type: Sequelize.STRING(20),
         allowNull: false,

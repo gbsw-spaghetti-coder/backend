@@ -39,7 +39,6 @@ module.exports = class Question extends Sequelize.Model {
     db.Question.belongsTo(db.User); // post.addUser, post.getUser, post.setUser
     db.Question.hasMany(db.Image); // post.addImages, post.getImages
     db.Question.hasMany(db.Answer); // post.addComments, post.getComments
-    db.Question.belongsToMany(db.User, { through: 'Good', as: 'Gooders' });
-    db.Question.belongsToMany(db.User, { through: 'Bad', as: 'Baders'});
+    db.Question.hasMany(db.Good);
   }
 };

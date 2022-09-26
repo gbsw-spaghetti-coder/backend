@@ -7,22 +7,12 @@ exports.sign = async (req, res) => {
   try {
     const hash = await bcrypt.hash(password, 12);
 
-    if(req.file == null) {
-      await User.create({
-        email,
-        password: hash,
-        nick,
-        provider: 'local',
-      });
-    } else {
-      await User.create({
-        email,
-        password: hash,
-        nick,
-        profile_img: req.file.location,
-        provider: 'local',
-      });
-    }
+    await User.create({
+      email,
+      password: hash,
+      nick,
+      provider: 'local',
+    });
 
     res.status(201).json({
       success: true,
@@ -57,7 +47,7 @@ exports.login = async (req, res, next) => {
     }
 
     if (!user) {
-      return res.status(400).json({ success: false, message: "유저 정보가 다릅니다"});
+      return res.status(400).json({ success: false, message: "비밀번호가 다릅니다"});
     }
 
     return req.login(user, (loginError) => {

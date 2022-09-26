@@ -1,6 +1,6 @@
 const url = require('url');
 const sequelize = require("sequelize");
-const { Question, User } = require('../models');
+const { Question, User, Good } = require('../models');
 const Op = sequelize.Op;
 
 exports.createQuestion = async (req, res) => {
@@ -56,7 +56,9 @@ exports.getQuestions = async (req, res) => {
 
 exports.getQuestion = async (req, res) => {
   try {
-    const question = await Question.findOne({ where: { id: req.params.id }});
+    const question = await Question.findOne(
+      { where: { id: req.params.id }, include : Good},
+    );
     if (question) {
       await Question.increment({ views: 1 }, { where: { id: req.params.id }});
     }
@@ -186,12 +188,28 @@ exports.searchQuestion = async (req, res) => {
 exports.goodQuestion = async (req, res) => {
   try {
     const post = await Question.findOne({ where: { id: req.params.id }});
+    const user = await Good.findOne({ where: { UserId: req.user.id, QuestionId: req.params.id }});
+    /*const question = await Good.findOne({ where: { QuestionId: req.params.id }});*/
 
     if (!post) {
       return res.status(403).json({ success: false, message: "질문이 존재하지 않습니다"});
     }
 
+    if (user) {
+      return res.status(400).json({ success: false, message: "이미 좋아요 누른 질문 입니다" })
+    }
+
+    await Good.create({
+      QuestionId: req.params.id,
+      UserId: req.user.id,
+    });
+
+    res.status(201).json({ success: true, message: "좋아요 등록 성공" });
   } catch (error) {
     console.error(error);
   }
+}
+
+exports.badQuestion = async (req, res) => {
+
 }
