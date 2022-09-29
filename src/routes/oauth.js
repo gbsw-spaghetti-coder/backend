@@ -6,14 +6,14 @@ router.get('/kakao', passport.authenticate('kakao'));
 router.get('/kakao/callback', passport.authenticate('kakao', {
   failureRedirect: '/',
 }), (req, res) => {
-  res.redirect('/');
+  res.redirect('http://localhost:3000');
 });
 
 router.get('/github', passport.authenticate('github'));
 router.get('/github/callback', passport.authenticate('github', {
   failureRedirect: '/',
 }), (req, res) => {
-  res.redirect('http://localhost:3000/dfad');
+  res.redirect('http://localhost:3000');
 })
 
 module.exports = router;
