@@ -1,4 +1,5 @@
-const { Answer, User } = require('../models');
+const { Answer, User, Question, Selection } = require('../models');
+const Sequelize = require('sequelize');
 
 exports.getAnswer = async (req, res) => {
   try {
@@ -64,45 +65,17 @@ exports.deleteAnswer = async (req, res) => {
 
 exports.selection = async (req, res) => {
   try {
-    const selection = await Answer.findAll({
-      where: { QuestionId : req.params.id }
-    });
-
-    console.log(selection);
-
-
-    /*const user = await Answer.findOne({
+    const writer = await Question.findOne({
       where: { UserId: req.user.id }
     });
+    const user = await Answer.findOne({
+      where: { UserId: req.user.id }
+    })
 
+    const result = Answer.query("select * from answer");
+    res.json(result);
 
-    if (req.user.id !== selection.dataValues.UserId) {
-      res.status(200).json({
-        success: false,
-        message: "글쓴이만 수정 가능합니다"
-      })
-    }*/
-
-    if (selection.dataValues.selection === 'false') {
-      await Answer.update(
-        { selection: 'true'},
-        { where: { id: req.user.id }}
-      )
-      res.status(200).json({
-        success: true,
-        message: "채택 완료"
-      });
-    } else {
-      res.status(400).json({
-        success: false,
-        message: "채택된 답변입니다"
-      })
-    }
   } catch (error) {
     console.error(error);
-    res.status(400).json({
-      success: false,
-      message: "채택 실패"
-    })
   }
 }

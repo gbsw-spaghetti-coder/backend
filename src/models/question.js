@@ -36,9 +36,11 @@ module.exports = class Question extends Sequelize.Model {
     });
   }
   static associate(db){
-    db.Question.belongsTo(db.User); // post.addUser, post.getUser, post.setUser
-    db.Question.hasMany(db.Image); // post.addImages, post.getImages
-    db.Question.hasMany(db.Answer); // post.addComments, post.getComments
+    db.Question.belongsTo(db.User);
+    db.Question.hasMany(db.Image);
+    db.Question.hasMany(db.Answer);
     db.Question.hasMany(db.Good);
+    db.Question.hasMany(db.Bad);
+    db.Question.hasMany(db.Selection);
   }
 };

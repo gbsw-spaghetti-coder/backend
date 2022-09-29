@@ -7,7 +7,7 @@ exports.isExistEmail = async (req, res) => {
     if (existEmail) {
       res.status(409).json({
         success: false,
-        message: "사용 불가능한 이메일 입니다",
+        message: "이미 사용 중인 이메일 입니다",
       });
     } else {
       res.status(200).json({

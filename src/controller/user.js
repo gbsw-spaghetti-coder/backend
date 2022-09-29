@@ -17,6 +17,7 @@ exports.getMyData = async (req, res) => {
 }
 
 exports.updateUser = async (req, res) => {
+  const { email, password, nick } = req.body;
   try {
 
   } catch (error) {

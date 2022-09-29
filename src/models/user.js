@@ -70,5 +70,7 @@ module.exports = class User extends Sequelize.Model {
     db.User.hasMany(db.Question);
     db.User.hasMany(db.Answer);
     db.User.hasMany(db.Good);
+    db.User.hasMany(db.Bad);
+    db.User.hasMany(db.Selection);
   }
 };

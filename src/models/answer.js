@@ -28,5 +28,6 @@ module.exports = class Answer extends Sequelize.Model {
   static associate(db){
     db.Answer.belongsTo(db.User);
     db.Answer.belongsTo(db.Question);
+    db.Answer.hasMany(db.Selection);
   }
 };

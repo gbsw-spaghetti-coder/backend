@@ -11,8 +11,9 @@ router.get('/:id', controller.getQuestion);
 router.get('/', controller.getQuestions);
 router.get('/search', controller.searchQuestion);
 router.post('/', isLoggedIn, controller.createQuestion);
-router.delete('/:id', isLoggedIn, controller.delete);
+router.delete('/:id', isLoggedIn, controller.deleteQuestion);
 router.get('/good/:id', isLoggedIn, controller.goodQuestion);
+router.get('/bad/:id', isLoggedIn, controller.badQuestion);
 
 
 /*router.post('/image', profileUploader.single('image'), (req, res) => {
