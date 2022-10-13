@@ -70,11 +70,7 @@ exports.selection = async (req, res) => {
     });
     const user = await Answer.findOne({
       where: { UserId: req.user.id }
-    })
-
-    const result = Answer.query("select * from answer");
-    res.json(result);
-
+    });
   } catch (error) {
     console.error(error);
   }

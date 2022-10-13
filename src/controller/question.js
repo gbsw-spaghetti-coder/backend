@@ -56,16 +56,23 @@ exports.getQuestions = async (req, res) => {
 
 exports.getQuestion = async (req, res) => {
   try {
-    const question = await Question.findOne(
+    const question = await Question.findAll(
       {
         where: { id: req.params.id },
-        include : [{
-          User,
-        }, {
-          Good
-        }, {
-          Bad
-        }]
+        include: [
+          {
+            model: User,
+            attributes: ['email', 'nick', 'profile_img', 'point']
+          },
+          {
+            model: Good,
+            attributes: ['id']
+          },
+          {
+            model: Bad,
+            attributes: ['id']
+          }
+        ]
       },
     );
     if (question) {
@@ -126,13 +133,13 @@ exports.deleteQuestion = async (req, res) => {
   }
 }
 
-exports.searchQuestion = async (req, res) => {
+/*exports.searchQuestion = async (req, res) => {
 
 
   try {
     const query = url.parse(req.url, true).query;
     //url = http://localhost:3001/api/question/search?q=zz
-    /*if(pageNum > 1){
+    /!*if(pageNum > 1){
       offset = 15 * (pageNum - 1);
     }
     const question = await Question.findAll({
@@ -154,16 +161,16 @@ exports.searchQuestion = async (req, res) => {
       offset: offset,
       limit: 15,
       order: [['id', 'desc']]
-    });*/
+    });*!/
     res.status(200).json({
       success: true,
     });
   } catch (error) {
     console.error(error);
   }
-}
+}*/
 
-/*exports.search = async (req, res) => {
+exports.search = async (req, res) => {
   let query = req.query.q;
   try {
     const questions = await Question.findAll({
@@ -181,24 +188,26 @@ exports.searchQuestion = async (req, res) => {
           }
         ]
       },
-      include: User,
+      include: {
+        model: User,
+        attributes:['email', 'nick', 'profile_img', 'point']
+      },
       limit: 15,
       order: [['id', 'desc']]
     });
-    res.statsus(200).json({
+    res.status(200).json({
       success: true,
       questions
     })
   } catch (error) {
     console.error(error);
   }
-}*/
+}
 
 exports.goodQuestion = async (req, res) => {
   try {
     const question = await Question.findOne({ where: { id: req.params.id }});
     const user = await Good.findOne({ where: { UserId: req.user.id, QuestionId: req.params.id }});
-    /*const question = await Good.findOne({ where: { QuestionId: req.params.id }});*/
 
     if (!question) {
       return res.status(403).json({ success: false, message: "질문이 존재하지 않습니다"});

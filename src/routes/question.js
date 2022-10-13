@@ -9,7 +9,7 @@ const { profileUploader } = require('../utils/uploader');
 
 router.get('/:id', controller.getQuestion);
 router.get('/', controller.getQuestions);
-router.get('/search', controller.searchQuestion);
+router.get('/search', controller.search);
 router.post('/', isLoggedIn, controller.createQuestion);
 router.delete('/:id', isLoggedIn, controller.deleteQuestion);
 router.get('/good/:id', isLoggedIn, controller.goodQuestion);
