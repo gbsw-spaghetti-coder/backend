@@ -1,4 +1,3 @@
-const url = require('url');
 const sequelize = require("sequelize");
 const { Question, User, Good, Bad } = require('../models');
 const Op = sequelize.Op;
@@ -28,7 +27,6 @@ exports.createQuestion = async (req, res) => {
 }
 
 exports.getQuestions = async (req, res) => {
-  console.log(req.query, req.url);
   let pageNum = req.query.page;
   let offset = 0;
 
@@ -37,6 +35,20 @@ exports.getQuestions = async (req, res) => {
   }
   try {
     const data = await Question.findAll({
+      include: [
+        {
+          model: User,
+          attributes: ['email', 'nick', 'profile_img', 'point']
+        },
+        {
+          model: Good,
+          attributes: ['id']
+        },
+        {
+          model: Bad,
+          attributes: ['id']
+        }
+      ],
       offset: offset,
       limit: 15,
       order: [['id', 'desc']]
@@ -133,45 +145,19 @@ exports.deleteQuestion = async (req, res) => {
   }
 }
 
-/*exports.searchQuestion = async (req, res) => {
-
-
+exports.getCategory = async (req, res) => {
   try {
-    const query = url.parse(req.url, true).query;
-    //url = http://localhost:3001/api/question/search?q=zz
-    /!*if(pageNum > 1){
-      offset = 15 * (pageNum - 1);
-    }
-    const question = await Question.findAll({
-      where:{
-        [Op.or]: [
-          {
-            title: {
-              [Op.like]: "%" + query.search + "%"
-            }
-          },
-          {
-            content: {
-              [Op.like]: "%" + query.search + "%"
-            }
-          }
-        ]
-      },
-      include: User,
-      offset: offset,
-      limit: 15,
-      order: [['id', 'desc']]
-    });*!/
-    res.status(200).json({
-      success: true,
-    });
-  } catch (error) {
-    console.error(error);
+    const questions = await Question.findAll({
+      where: { category: req.params.category }
+    })
+    res.json(questions)
+  } catch (err) {
+    console.error(err);
   }
-}*/
+}
 
 exports.search = async (req, res) => {
-  let query = req.query.q;
+  let query = req.params.search;
   try {
     const questions = await Question.findAll({
       where:{

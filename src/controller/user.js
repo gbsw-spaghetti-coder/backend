@@ -1,7 +1,6 @@
 const { User } = require('../models');
 
 exports.getMyData = async (req, res) => {
-  console.log(req.user);
   try {
     const data = {
       email: req.user.dataValues.email,

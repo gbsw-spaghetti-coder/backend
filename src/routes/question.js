@@ -8,8 +8,9 @@ const { isLoggedIn } = require('../utils/middlewares');
 const { profileUploader } = require('../utils/uploader');
 
 router.get('/:id', controller.getQuestion);
+router.get('/search/:search', controller.search);
 router.get('/', controller.getQuestions);
-router.get('/search', controller.search);
+router.get('/category/:category', controller.getCategory);
 router.post('/', isLoggedIn, controller.createQuestion);
 router.delete('/:id', isLoggedIn, controller.deleteQuestion);
 router.get('/good/:id', isLoggedIn, controller.goodQuestion);

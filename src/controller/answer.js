@@ -1,12 +1,13 @@
 const { Answer, User, Question, Selection } = require('../models');
-const Sequelize = require('sequelize');
 
 exports.getAnswer = async (req, res) => {
   try {
     const answers = await Answer.findAll({
+      attributes: ['id', 'content', 'selection', 'createdAt', 'updatedAt'],
+      where: { QuestionId : req.params.id },
       include : {
         model: User,
-        where: { QuestionId : req.params.id }
+        attributes: ['email', 'nick', 'profile_img', 'point'],
       }
     });
     res.status(200).json({
@@ -65,12 +66,11 @@ exports.deleteAnswer = async (req, res) => {
 
 exports.selection = async (req, res) => {
   try {
-    const writer = await Question.findOne({
-      where: { UserId: req.user.id }
-    });
-    const user = await Answer.findOne({
-      where: { UserId: req.user.id }
-    });
+    const writer = await Question.findOne({ where: { UserId: req.user.id } });
+    const user = await Answer.findOne({ where: { UserId: req.user.id } });
+
+    res.json({ writer, user })
+
   } catch (error) {
     console.error(error);
   }
