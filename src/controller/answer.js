@@ -54,7 +54,6 @@ exports.selection = async (req, res) => {
   try {
     const writer = await Question.findOne({ where: { UserId: req.user.id } });
     const user = await Answer.findOne({ where: { UserId: req.user.id } });
-    console.log()
     if(writer.userId === req.user.id) {
       await Answer.update({
         
