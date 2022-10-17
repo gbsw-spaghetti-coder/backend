@@ -8,7 +8,7 @@ exports.getMyData = async (req, res) => {
       profile_img: req.user.dataValues.profile_img,
       point: req.user.dataValues.point
     }
-    res.json({ success: true, data })
+    res.json(data)
   } catch (error) {
     console.error(error);
     res.status(400).json({ message: "사용자 정보를 불러오지 못했습니다" })
@@ -38,15 +38,9 @@ exports.updateMyIntroduce = async (req, res) => {
       { introduce: req.body.introduce},
       { where: {id: req.user.id} }
     );
-    res.status(200).json({
-      success: true,
-      message: "자기소개 수정 성공"
-    });
+    res.status(200).json({ success: true, message: "자기소개 수정 성공" });
   } catch (error) {
     console.error(error);
-    res.status(400).json({
-      success: false,
-      message: "수정 실패"
-    });
+    res.status(400).json({ success: false, message: "수정 실패" });
   }
 }

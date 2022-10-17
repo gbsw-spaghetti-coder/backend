@@ -5,7 +5,6 @@ const Op = sequelize.Op;
 exports.createQuestion = async (req, res) => {
   const { title, content, category } = req.body;
   try {
-
     await Question.create({
       title,
       content,
@@ -13,16 +12,10 @@ exports.createQuestion = async (req, res) => {
       UserId: req.user.id,
     });
 
-    res.status(200).json({
-      success: true,
-      message: "질문 등록 성공"
-    });
+    res.status(200).json({ success: true, message: "질문 등록 성공" });
   } catch (error) {
     console.error(error);
-    res.status(400).json({
-      success: false,
-      message: "질문 등록 실패"
-    })
+    res.status(400).json({ success: false, message: "질문 등록 실패" })
   }
 }
 
@@ -34,7 +27,7 @@ exports.getQuestions = async (req, res) => {
     offset = 15 * (pageNum - 1);
   }
   try {
-    const data = await Question.findAll({
+    const question = await Question.findAll({
       include: [
         {
           model: User,
@@ -53,16 +46,10 @@ exports.getQuestions = async (req, res) => {
       limit: 15,
       order: [['id', 'desc']]
     })
-    res.status(200).json({
-      success: true,
-      data
-    });
+    res.status(200).json(question);
   } catch (error) {
     console.error(error);
-    res.status(400).json({
-      success: false,
-      message: "글 불러오기 실패"
-    })
+    res.status(400).json({ success: false, message: "글 불러오기 실패" })
   }
 }
 
@@ -90,10 +77,7 @@ exports.getQuestion = async (req, res) => {
     if (question) {
       await Question.increment({ views: 1 }, { where: { id: req.params.id }});
     }
-    res.status(200).json({
-      success: true,
-      question
-    })
+    res.status(200).json(question)
   } catch (error) {
     console.error(error);
   }
@@ -111,10 +95,7 @@ exports.updateQuestion = async (req, res) => {
         { content: req.body.content },
         { where: { id: req.params.id } }
       )
-      res.status(200).json({
-        success: true,
-        message: "질문 수정 완료"
-      })
+      res.status(200).json({ success: true, message: "질문 수정 완료" })
     }
   } catch (error) {
     console.error(error);
@@ -127,28 +108,33 @@ exports.deleteQuestion = async (req, res) => {
 
     if(req.user.id === question.dataValues.UserId) {
       await Question.destroy({ where: { id: req.params.id }});
-      res.status(200).json({
-        success: true,
-        message: '질문 삭제 성공',
-      });
+      res.status(200).json({ success: true, message: '질문 삭제 성공' });
     } else {
-      res.status(401).json({
-        success: false,
-        message: '삭제 권한이 없습니다'
-      });
+      res.status(401).json({ success: false, message: '삭제 권한이 없습니다' });
     }
   } catch (error) {
-    res.status(200).json({
-      success: false,
-      message: '질문 삭제 실패',
-    });
+    res.status(200).json({ success: false, message: '질문 삭제 실패' });
   }
 }
 
 exports.getCategory = async (req, res) => {
   try {
     const questions = await Question.findAll({
-      where: { category: req.params.category }
+      where: { category: req.params.category },
+      include: [
+        {
+          model: User,
+          attributes: ['email', 'nick', 'profile_img', 'point']
+        },
+        {
+          model: Good,
+          attributes: ['id']
+        },
+        {
+          model: Bad,
+          attributes: ['id']
+        }
+      ]
     })
     res.json(questions)
   } catch (err) {
@@ -181,10 +167,7 @@ exports.search = async (req, res) => {
       limit: 15,
       order: [['id', 'desc']]
     });
-    res.status(200).json({
-      success: true,
-      questions
-    })
+    res.status(200).json(questions)
   } catch (error) {
     console.error(error);
   }
@@ -207,10 +190,7 @@ exports.goodQuestion = async (req, res) => {
         }
       });
 
-      return res.status(200).json({
-        success: true,
-        message: "좋아요 취소 성공"
-      });
+      return res.status(200).json({ success: true, message: "좋아요 취소 성공" });
     }
 
     await Good.create({

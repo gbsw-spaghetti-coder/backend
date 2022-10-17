@@ -10,10 +10,7 @@ exports.getAnswer = async (req, res) => {
         attributes: ['email', 'nick', 'profile_img', 'point'],
       }
     });
-    res.status(200).json({
-      success: true,
-      data: answers
-    });
+    res.status(200).json(answers);
   } catch (error) {
     console.error(error);
   }
@@ -26,16 +23,10 @@ exports.createAnswer = async (req, res) => {
       QuestionId: parseInt(req.params.id, 10),
       UserId: req.user.id,
     });
-    res.status(200).json({
-      success: true,
-      message: "댓글 등록 성공"
-    });
+    res.status(200).json({ success: true, message: "댓글 등록 성공" });
   } catch (error) {
     console.error(error);
-    res.status(400).json({
-      success: false,
-      message: "댓글 등록 실패"
-    })
+    res.status(400).json({ success: false, message: "댓글 등록 실패" })
   }
 }
 
@@ -44,24 +35,19 @@ exports.deleteAnswer = async (req, res) => {
     const answer = await Answer.findOne({ where: { id: req.params.id }});
     if (req.user.id === answer.dataValues.UserId) {
       await Answer.destroy({ where: { id: req.params.id }});
-      res.status(200).json({
-        success: true,
-        message: "답변 삭제 성공"
-      });
+      res.status(200).json({ success: true, message: "답변 삭제 성공" });
     } else {
-      res.status(401).json({
-        success: false,
-        message: '삭제 권한이 없습니다'
-      });
+      res.status(401).json({ success: false, message: '삭제 권한이 없습니다' });
     }
   } catch (error) {
     console.error(error);
-    res.status(400).json({
-      success: false,
-      message: "답변 삭제 실패"
-    })
+    res.status(400).json({ success: false, message: "답변 삭제 실패" })
   }
 }
+
+
+//question 의 userid 와 req.user.id 가 같으면 채택 가능 다르면 실패
+//
 
 
 exports.selection = async (req, res) => {
@@ -69,7 +55,11 @@ exports.selection = async (req, res) => {
     const writer = await Question.findOne({ where: { UserId: req.user.id } });
     const user = await Answer.findOne({ where: { UserId: req.user.id } });
 
-    res.json({ writer, user })
+    if(writer.userId === req.user.id) {
+      await Answer.update({
+        
+      })
+    }
 
   } catch (error) {
     console.error(error);

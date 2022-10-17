@@ -14,27 +14,15 @@ exports.sign = async (req, res) => {
       provider: 'local',
     });
 
-    res.status(201).json({
-      success: true,
-      message: "회원가입 성공",
-    })
+    res.status(201).json({ success: true, message: "회원가입 성공" })
   } catch (error) {
     if (error.message === 'Validation error: Validation isEmail on email failed') {
-      res.status(400).json({
-        success: false,
-        message: "올바른 이메일 형식이 아닙니다"
-      })
+      res.status(400).json({ success: false, message: "올바른 이메일 형식이 아닙니다" })
     } else if(error.name === "SequelizeUniqueConstraintError") {
-      res.status(400).json({
-        success: false,
-        message: "이미 가입된 이메일 입니다"
-      })
+      res.status(400).json({ success: false, message: "이미 가입된 이메일 입니다" })
     } else {
       console.error(error.name);
-      res.status(400).json({
-        success: false,
-        message: "가입 실패",
-      });
+      res.status(400).json({ success: false, message: "가입 실패" });
     }
   }
 }
