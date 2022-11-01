@@ -25,6 +25,7 @@ module.exports = class User extends Sequelize.Model {
       profile_img: {
         type: Sequelize.STRING,
         allowNull: true,
+        defaultValue: 'https://spaghetti-listener.s3.ap-northeast-2.amazonaws.com/profile.png',
         comment: "프로필 이미지"
       },
       point: {

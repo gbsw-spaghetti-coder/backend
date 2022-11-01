@@ -50,7 +50,7 @@ exports.deleteAnswer = async (req, res) => {
 //
 
 
-exports.selection = async (req, res) => {
+exports.selection = async (req, res, next) => {
   try {
     const writer = await Question.findOne({ where: { UserId: req.user.id } });
     const user = await Answer.findOne({ where: { UserId: req.user.id } });
@@ -62,5 +62,6 @@ exports.selection = async (req, res) => {
 
   } catch (error) {
     console.error(error);
+    next(error);
   }
 }

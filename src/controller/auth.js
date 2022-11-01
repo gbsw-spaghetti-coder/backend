@@ -2,7 +2,7 @@ const { User } = require('../models');
 const bcrypt = require("bcrypt");
 const passport = require("passport");
 
-exports.sign = async (req, res) => {
+exports.sign = async (req, res, next) => {
   const { email, password, nick } = req.body;
   try {
     const hash = await bcrypt.hash(password, 12);
@@ -18,11 +18,14 @@ exports.sign = async (req, res) => {
   } catch (error) {
     if (error.message === 'Validation error: Validation isEmail on email failed') {
       res.status(400).json({ success: false, message: "올바른 이메일 형식이 아닙니다" })
+      next(error);
     } else if(error.name === "SequelizeUniqueConstraintError") {
       res.status(400).json({ success: false, message: "이미 가입된 이메일 입니다" })
+      next(error);
     } else {
       console.error(error.name);
       res.status(400).json({ success: false, message: "가입 실패" });
+      next(error);
     }
   }
 }
