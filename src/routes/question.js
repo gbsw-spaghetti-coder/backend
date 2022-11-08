@@ -3,9 +3,9 @@ const router = express.Router();
 
 const controller = require('../controller/question');
 
-const { isLoggedIn } = require('../utils/middlewares');
+const { isLoggedIn } = require('../middlewares/authorization');
 
-const { profileUploader } = require('../utils/uploader');
+const { profileUploader } = require('../middlewares/uploader');
 
 router.get('/:id', controller.getQuestion);
 router.get('/search/:search', controller.search);

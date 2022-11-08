@@ -3,7 +3,7 @@ const router = express.Router();
 
 const controller = require('../controller/answer')
 
-const { isLoggedIn } = require('../utils/middlewares');
+const { isLoggedIn } = require('../middlewares/authorization');
 
 router.get('/:id', controller.getAnswer);
 router.post('/:id', isLoggedIn, controller.createAnswer);
