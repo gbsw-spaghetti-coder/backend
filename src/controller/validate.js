@@ -31,17 +31,16 @@ exports.isExistNick = async (req, res) => {
 
 exports.validatePassword = async (req, res, next) => {
   try {
-    const hash = await bcrypt.hash(req.body.password, 12);
-
-    console.log(req.user)
-    
-    console.log(req.user.password);
-    console.log(hash)
-
-    if(req.user.password !== hash) {
-      res.status(200).json({ success: true, message: "가능"})
-    } else {
-      res.status(400).json({ success: false, message: "비밀번호가 다릅니다"});
+    const user = await User.findOne({
+      where: { email: req.user.email }
+    });
+    if(user) {
+      const hash = await bcrypt.compare(req.body.password, user.password);
+      if(!hash) {
+        res.status(400).json({ success: false, message: "비밀번호가 다릅니다"});
+      } else {
+        res.status(200).json({ success: true, message: "바꿀수있습니다"});
+      }
     }
   } catch (error) {
     next(error);
