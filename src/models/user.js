@@ -31,7 +31,7 @@ module.exports = class User extends Sequelize.Model {
       point: {
         type: Sequelize.INTEGER,
         allowNull: false,
-        defaultValue: 0,
+        defaultValue: 1000,
         comment: "유저 포인트"
       },
       provider: {
@@ -56,6 +56,11 @@ module.exports = class User extends Sequelize.Model {
         allowNull: true,
         comment: "자기소개",
       },
+      lastlogintime: {
+        type: Sequelize.STRING(50),
+        allowNull: true,
+        comment: "로그인시간"
+      }
     }, {
       sequelize,
       timestamps: true,

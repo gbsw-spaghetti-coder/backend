@@ -60,17 +60,3 @@ exports.updatePassword = async (req, res, next) => {
     next(error);
   }
 }
-
-/*
-exports.updateMyIntroduce = async (req, res) => {
-  try {
-    await User.update(
-      { introduce: req.body.introduce},
-      { where: {id: req.user.id} }
-    );
-    res.status(200).json({ success: true, message: "자기소개 수정 성공" });
-  } catch (error) {
-    console.error(error);
-    res.status(400).json({ success: false, message: "수정 실패" });
-  }
-}*/

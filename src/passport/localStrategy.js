@@ -11,7 +11,7 @@ module.exports = () => {
   }, async (email, password, done) => {
     try {
       const exUser = await User.findOne({
-        attributes: ['id','email', 'password', 'nick', 'profile_img', 'point'],
+        attributes: ['id','email', 'password', 'nick', 'profile_img', 'point', 'lastlogintime'],
         where: { email }
       });
       if (exUser) {

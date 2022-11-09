@@ -8,7 +8,7 @@ const { isLoggedIn } = require('../middlewares/authorization');
 router.get('/:id', controller.getAnswer);
 router.post('/:id', isLoggedIn, controller.createAnswer);
 router.delete('/:id', isLoggedIn, controller.deleteAnswer);
-router.get('/selection/:id', isLoggedIn, controller.selection);
+router.get('/selection/:qid/:aid', isLoggedIn, controller.selection);
 
 
 module.exports = router;

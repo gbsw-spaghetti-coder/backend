@@ -45,6 +45,25 @@ exports.deleteAnswer = async (req, res) => {
   }
 }
 
+/*exports.updateAnswer = async (req, res, next) => {
+  try {
+    const answer = await Answer.findOne({ where: {id: req.params.id}});
+    if(req.user.id === answer.UserId) {
+       await Answer.update(
+         { content: req.body.content },
+         { where: { id: req.params.id } }
+       )
+      res.status(200).json({ success: true, message: "답변 수정 완료" });
+    }
+  } catch(err) {
+    console.error(err);
+    res.status(400).json({
+      success: false,
+      message: "답변 수정에 실패하였습니다"
+    })
+  }
+}*/
+
 
 //question 의 userid 와 req.user.id 가 같으면 채택 가능 다르면 실패
 //
@@ -52,12 +71,13 @@ exports.deleteAnswer = async (req, res) => {
 
 exports.selection = async (req, res, next) => {
   try {
-    const writer = await Question.findOne({ where: { UserId: req.user.id } });
-    const user = await Answer.findOne({ where: { UserId: req.user.id } });
-    if(writer.userId === req.user.id) {
-      await Answer.update({
-        
-      })
+    const question = await Question.findOne({ where: {id: req.params.qid} })
+    const answer = await Answer.findOne({ where: { id: req.params.aid }});
+
+    if(question.UserId !== req.user.id) {
+      res.status(401).json({ success: false, message: "작성자만 채택 가능합니다 "});
+    } else {
+      res.status(200).json({ success: true, message: "채택 성공"});
     }
 
   } catch (error) {

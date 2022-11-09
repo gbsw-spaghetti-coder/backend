@@ -5,14 +5,18 @@ const Op = sequelize.Op;
 exports.createQuestion = async (req, res) => {
   const { title, content, category } = req.body;
   try {
-    await Question.create({
-      title,
-      content,
-      category,
-      UserId: req.user.id,
-    });
-
-    res.status(200).json({ success: true, message: "질문 등록 성공" });
+    if(req.user.point <= 0) {
+      res.status(400).json({ success: false, message: "포인트가 없어서 글을 작성할 수 없습니다 "});
+    } else {
+      await User.increment({ point: -50 }, {where: { id: req.user.id }});
+      await Question.create({
+        title,
+        content,
+        category,
+        UserId: req.user.id,
+      });
+      res.status(200).json({ success: true, message: "질문 등록 성공, 포인트 -50" });
+    }
   } catch (error) {
     console.error(error);
     res.status(400).json({ success: false, message: "질문 등록 실패" })
@@ -83,7 +87,7 @@ exports.getQuestion = async (req, res) => {
   }
 }
 
-exports.updateQuestion = async (req, res) => {
+exports.updateQuestion = async (req, res, next) => {
   try {
     const question = await Question.findOne({ where: { id: req.params.id }});
 
@@ -99,6 +103,7 @@ exports.updateQuestion = async (req, res) => {
     }
   } catch (error) {
     console.error(error);
+    next(error);
   }
 }
 

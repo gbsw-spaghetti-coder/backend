@@ -1,6 +1,7 @@
 const { User } = require('../models');
 const bcrypt = require("bcrypt");
 const passport = require("passport");
+const moment = require('moment');
 
 exports.sign = async (req, res, next) => {
   const { email, password, nick } = req.body;
@@ -41,12 +42,20 @@ exports.login = async (req, res, next) => {
       return res.status(400).json({ success: false, message: "비밀번호가 다릅니다"});
     }
 
-    return req.login(user, (loginError) => {
-      if(loginError) {
+    return req.login(user, async (loginError) => {
+      if (loginError) {
         console.error(loginError);
-        return res.status(400).json({ success: false, message: "로그인에 실패하였습니다"});
+        return res.status(400).json({success: false, message: "로그인에 실패하였습니다"});
       }
-      return res.status(200).json({ success: true, message: "로그인에 성공하였습니다"});
+      let today = moment().format("DD");
+
+      if (user.lastlogintime === today) {
+        res.status(200).json({success: true, message: "로그인에 성공하였습니다"});
+      } else {
+        await User.increment({point: 100}, {where: {id: req.user.id}})
+        await User.update({ lastlogintime: today }, {where: {id: req.user.id}});
+        res.status(200).json({success: true, message: "로그인에 성공하였습니다, 포인트 +100"});
+      }
     })
   })(req, res, next);
 }
