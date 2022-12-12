@@ -5,13 +5,13 @@ const controller = require('../controller/question');
 
 const { isLoggedIn } = require('../middlewares/authorization');
 
-const { profileUploader } = require('../middlewares/uploader');
+const { postUploader }  = require('../middlewares/uploader');
 
 router.get('/:id', controller.getQuestion);
 router.get('/search/:search', controller.search);
 router.get('/', controller.getQuestions);
 router.get('/category/:category', controller.getCategory);
-router.post('/', isLoggedIn, controller.createQuestion);
+router.post('/', isLoggedIn, postUploader.array('img'), controller.createQuestion);
 router.delete('/:id', isLoggedIn, controller.deleteQuestion);
 router.get('/good/:id', isLoggedIn, controller.goodQuestion);
 router.get('/bad/:id', isLoggedIn, controller.badQuestion);

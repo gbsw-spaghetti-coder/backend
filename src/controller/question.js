@@ -1,5 +1,5 @@
 const sequelize = require("sequelize");
-const { Question, User, Good, Bad } = require('../models');
+const { Question, User, Good, Bad, Image } = require('../models');
 const Op = sequelize.Op;
 
 exports.createQuestion = async (req, res) => {
@@ -8,13 +8,29 @@ exports.createQuestion = async (req, res) => {
     if(req.user.point <= 0) {
       res.status(400).json({ success: false, message: "포인트가 없어서 글을 작성할 수 없습니다 "});
     } else {
-      await User.increment({ point: -50 }, {where: { id: req.user.id }});
       await Question.create({
         title,
         content,
         category,
         UserId: req.user.id,
       });
+
+      console.log(req.file);
+      console.log(req.files);
+
+      /*if(req.files) {
+        console.log(req.files[1].location);
+        if(Array.isArray(req.files.location)) {
+          const images = await Promise.all(req.files.location((image) => Image.create({ url: image})));
+          await post.addImages(images);
+        } else {
+          const image = await Image.create({ url: req.files.location });
+          await post.addImages(image);
+        }
+      }*/
+
+      await User.increment({ point: -50 }, {where: { id: req.user.id }});
+
       res.status(200).json({ success: true, message: "질문 등록 성공, 포인트 -50" });
     }
   } catch (error) {
@@ -28,7 +44,7 @@ exports.getQuestions = async (req, res) => {
   let offset = 0;
 
   if(pageNum > 1){
-    offset = 15 * (pageNum - 1);
+    offset = 10 * (pageNum - 1);
   }
   try {
     const question = await Question.findAll({
@@ -47,7 +63,7 @@ exports.getQuestions = async (req, res) => {
         }
       ],
       offset: offset,
-      limit: 15,
+      limit: 10,
       order: [['id', 'desc']]
     })
     res.status(200).json(question);
@@ -75,7 +91,7 @@ exports.getQuestion = async (req, res) => {
             model: Bad,
             attributes: ['id']
           }
-        ]
+        ],
       },
     );
     if (question) {
@@ -123,6 +139,12 @@ exports.deleteQuestion = async (req, res) => {
 }
 
 exports.getCategory = async (req, res) => {
+  let pageNum = req.query.page;
+  let offset = 0;
+
+  if(pageNum > 1){
+    offset = 10 * (pageNum - 1);
+  }
   try {
     const questions = await Question.findAll({
       where: { category: req.params.category },
@@ -139,7 +161,10 @@ exports.getCategory = async (req, res) => {
           model: Bad,
           attributes: ['id']
         }
-      ]
+      ],
+      offset: offset,
+      limit: 10,
+      order: [['id', 'desc']]
     })
     res.json(questions)
   } catch (err) {
@@ -169,7 +194,7 @@ exports.search = async (req, res) => {
         model: User,
         attributes:['email', 'nick', 'profile_img', 'point']
       },
-      limit: 15,
+      limit: 10,
       order: [['id', 'desc']]
     });
     res.status(200).json(questions)
